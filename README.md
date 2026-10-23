@@ -12,6 +12,12 @@ Klaus is a lightweight Discord bot that replies when mentioned using an AI model
 - Handles rate limits with a simple retry flow
 - Splits long messages to fit Discord’s 2000-character limit
 
+## run 
+
+```sh
+go run .
+```
+
 ## How it works
 
 The application does the following:
@@ -31,7 +37,15 @@ The application does the following:
 
 ## Configuration
 
-Set these environment variables before starting the bot:
+The easiest way is a `.env` file in the project directory. Copy `.env.example` to `.env` and fill in at least your Discord bot token:
+
+```bash
+cp .env.example .env
+```
+
+`.env` is ignored by git. Variables that are already set in the environment take precedence over values from `.env`.
+
+Alternatively, set these environment variables before starting the bot:
 
 ```bash
 export KLAUS_DISCORD_BOT_TOKEN="your_discord_bot_token"

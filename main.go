@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"context"
 	"encoding/json"
@@ -119,8 +120,49 @@ func (c *pollinationsClient) generateReply(ctx context.Context, history []chatMe
 	return plainText, nil
 }
 
+// loadDotEnv reads KEY=VALUE pairs from a .env file into the process environment.
+// Variables that are already set in the environment take precedence.
+func loadDotEnv(path string) {
+	file, err := os.Open(path)
+	if err != nil {
+		if !os.IsNotExist(err) {
+			log.Printf("Error opening %s: %v", path, err)
+		}
+		return
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+		line = strings.TrimPrefix(line, "export ")
+
+		key, value, found := strings.Cut(line, "=")
+		if !found {
+			continue
+		}
+		key = strings.TrimSpace(key)
+		value = strings.TrimSpace(value)
+		if len(value) >= 2 && (value[0] == '"' || value[0] == '\'') && value[len(value)-1] == value[0] {
+			value = value[1 : len(value)-1]
+		}
+
+		if _, exists := os.LookupEnv(key); !exists {
+			_ = os.Setenv(key, value)
+		}
+	}
+	if err := scanner.Err(); err != nil {
+		log.Printf("Error reading %s: %v", path, err)
+	}
+}
+
 func main() {
-	discordToken := strings.TrimSpace(os.Getenv("KLAUS_DISCORD_BOT_TOKEN"))
+	loadDotEnv(".env")
+
+	discordToken :=strings.TrimSpace(os.Getenv("KLAUS_DISCORD_BOT_TOKEN"))
 	pollinationsAPIKey := strings.TrimSpace(os.Getenv("KLAUS_POLLINATIONS_API_KEY"))
 	modelName := strings.TrimSpace(os.Getenv("KLAUS_POLLINATIONS_MODEL"))
 	if modelName == "" {
