@@ -1,6 +1,8 @@
-# Klaus
+# Klaus 1.1
 
-Klaus is a lightweight Discord bot that replies when mentioned using an AI model exposed through the Pollinations API. It is designed to feel like a casual Discord user: brief, dry, conversational, and in-character rather than formal or verbose.
+Klaus 1.1 is a lightweight Discord bot that replies when mentioned using an AI model exposed through the Pollinations API. It is designed to feel like a casual Discord user: brief, dry, conversational, and in-character rather than formal or verbose.
+
+This is a direct fork of the original Klaus by the godsent programmer acaimingus !!
 
 ## Features
 
